@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
     filename(req, file, callback) {
         const name = uuid.v4();
 
-        console.log(file);
+        console.log(file.mimetype);
 
         if (file.mimetype === 'image/png') {
             types = 'image';
@@ -48,7 +48,7 @@ const storage = multer.diskStorage({
         }
         if (file.mimetype === 'video/mp4') {
             types = 'video';
-            callback(null, `${name}.webm`);
+            callback(null, `${name}.mp4`);
             return;
         }
         if (file.mimetype === 'audio/mp3') {
