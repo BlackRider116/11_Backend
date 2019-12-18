@@ -7,8 +7,21 @@ const path = require('path');
 
 const errorNotFound = { error: 'id.not_found' };
 
-let nextId = 1;
-let posts = [];
+let nextId = 13;
+let posts = [
+    { id: 1, content: 'Старый пост 1', type: '', file: '', likes: -1 },
+    { id: 2, content: 'Старый пост 2', type: '', file: '', likes: -2 },
+    { id: 3, content: 'Старый пост 3', type: '', file: '', likes: -3 },
+    { id: 4, content: 'Старый пост 4', type: '', file: '', likes: -4 },
+    { id: 5, content: 'Старый пост 5', type: '', file: '', likes: -5 },
+    { id: 6, content: 'Старый пост 6', type: '', file: '', likes: -6 },
+    { id: 7, content: 'Старый пост 7', type: '', file: '', likes: -7 },
+    { id: 8, content: 'Аудио пост. Трек не выбирал, просто скачал первый попавшийся 😊', type: 'audio', file: 'http://localhost:9999/static/e5d36551-0620-4d80-b1bf-98e16c1ebf8c.webm', likes: 33 },
+    { id: 9, content: 'Видео пост. Видео так же, первый попавшийся 😁', type: 'video', file: 'http://localhost:9999/static/b92e0cbc-f293-4297-8d3c-7ec179944502.mp4', likes: 14 },
+    { id: 10, content: 'Пост с картинкой. А картинка в ПК завалялась в документах 😋', type: 'image', file: 'http://localhost:9999/static/69b6c0e0-8e2b-4fc9-ad30-8025d2ad1ecb.jpg', likes: 7 },
+    { id: 11, content: 'Еще есть функция проверки новых записей (кнопка "Показать новые записи"), скопировать ссылку, открыть в новой вкладке и добавить записи', type: '', file: '', likes: 0 },
+    { id: 12, content: 'Запись стрима (10 сек), фото с камеры. Данные хранятся на сервере, обнуляется сервер после 1ч простоя', type: '', file: '', likes: 0 },
+];
 let types = '';
 
 const server = express();
@@ -29,6 +42,7 @@ const storage = multer.diskStorage({
     filename(req, file, callback) {
         const name = uuid.v4();
 
+    
         console.log(file.mimetype);
 
         if (file.mimetype === 'image/png') {
@@ -113,7 +127,6 @@ server.get('/posts/:firstSeenId', (req, res) => {
     // console.log(firstSeenId)   
 });
 
-
 server.post('/posts', (req, res) => {
     const body = req.body;
     const id = body.id;
@@ -126,7 +139,9 @@ server.post('/posts', (req, res) => {
             likes: 0,
         }
         posts.push(newPost)
-        res.send(newPost)
+        // res.send(newPost)
+        console.log(posts)
+        res.send(posts[posts.length - 1])
         return;
     }
     const index = findPostIndexById(id);
@@ -134,6 +149,7 @@ server.post('/posts', (req, res) => {
         res.status(404).send(errorNotFound);
         return;
     }
+    
 });
 
 server.delete('/posts/:id', (req, res) => {
@@ -169,4 +185,6 @@ server.delete('/posts/:id/likes', (req, res) => {
     res.send(posts[index]);
 });
 
+
 server.listen(process.env.PORT || 9999);
+
